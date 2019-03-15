@@ -1,0 +1,8 @@
+---
+# defaults file for ansible-role-mysql-docker
+user: 'vagrant'
+
+mysql_versions: []
+mysql_root_password: 'secret'
+mysql_mount_owner: 'vagrant'
+mysql_mount_group: 'vagrant'

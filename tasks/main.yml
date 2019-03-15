@@ -1,0 +1,36 @@
+---
+- name: Ensure pip is installed
+  apt:
+    name: python3-pip
+    state: present
+
+- name: Ensure PyMySQL is installed
+  pip:
+    name: pymysql
+    state: present
+
+- name: Check for mysql_home existence
+  stat:
+    path: /home/{{ user }}/mysql_home
+  register: mysql_home
+
+- name: Create mysql_home directory
+  file:
+    path: /home/{{ user }}/mysql_home
+    owner: "{{ mysql_mount_owner }}"
+    group: "{{ mysql_mount_group }}"
+    state: directory
+
+- name: Get docker bridge gateway
+  shell: |
+    docker network inspect bridge | grep Gateway | awk -F\" '{print $4}'
+  register: bridge
+
+- name: Set docker gateway
+  set_fact:
+    mysql_root_host: "{{ bridge.stdout }}"
+
+- include_tasks: mysql-server.yml
+  loop: "{{ mysql_versions }}"
+  loop_control:
+    loop_var: mysql

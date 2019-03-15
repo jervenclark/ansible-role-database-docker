@@ -1,0 +1,25 @@
+---
+- name: Pull mysql server images
+  docker_image:
+    name: mysql
+    tag: "{{ mysql.version }}"
+  register: mysql_image
+
+- name: Create mysql v{{ mysql.version }} directory
+  file:
+    path: /home/{{ user }}/mysql_home/{{ mysql.version }}
+    owner: "{{ mysql_mount_owner }}"
+    group: "{{ mysql_mount_group }}"
+    state: directory
+  when: mysql_image.changed
+
+- name: Run mysql v{{ mysql.version }} server
+  docker_container:
+    name: mysql-{{ mysql.version }}
+    image: mysql:{{ mysql.version }}
+    published_ports: "{{ mysql.host }}:{{ mysql.guest }}"
+    state: started
+    detach: true
+    env:
+      MYSQL_ROOT_PASSWORD: "{{ mysql_root_password }}"
+      MYSQL_ROOT_HOST: "{{ mysql_root_host }}"

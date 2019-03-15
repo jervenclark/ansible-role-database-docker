@@ -1,0 +1,21 @@
+galaxy_info:
+  role_name: database_docker
+  author: Jerven Clark Chua
+  description: Configures dockerized database servers on Debian/Ubuntu hosts.
+  company:
+
+  license: BSD
+
+  min_ansible_version: 2.4
+
+  platforms:
+  - name: Ubuntu
+    versions:
+    - all
+
+  galaxy_tags:
+    - mysql
+    - database
+
+dependencies:
+  - geerlingguy.docker
